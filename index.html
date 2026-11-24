@@ -1,0 +1,124 @@
+<!doctype html>
+<html lang="ar" dir="rtl"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no,viewport-fit=cover">
+<meta name="theme-color" content="#0f0b1e"><title>كنيسة السيدة العذراء مريم</title>
+<link rel="manifest" href="manifest.json"><link rel="icon" href="icon.svg">
+<style>
+:root{--p:#7c3aed;--g:#fbbf24;--bg:#0f0b1e;--c:#1b1535;--t:#f4f1ff;--pk:#ff4d8d;--cy:#22d3ee}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent;user-select:none}
+input,textarea{user-select:text}
+html,body{margin:0;height:100%;overflow:hidden;overscroll-behavior:none;touch-action:manipulation;background:var(--bg);color:var(--t);font-family:system-ui,"Segoe UI",Tahoma,sans-serif}
+#app{display:flex;flex-direction:column;height:100%}
+header{background:linear-gradient(120deg,#7c3aed,#ff4d8d);color:#fff;padding:calc(10px + env(safe-area-inset-top)) 14px 14px;display:flex;align-items:center;gap:10px;border-radius:0 0 22px 22px}
+header b{font-size:18px;flex:1}header span{font-size:22px}
+main{flex:1;overflow-y:auto;padding:14px;overscroll-behavior:none}
+nav{display:flex;background:#181230;border-top:1px solid #2d2450;padding-bottom:env(safe-area-inset-bottom)}
+nav button{flex:1;border:0;background:none;padding:8px 0;font-size:10.5px;color:#8f86b8;font-family:inherit}
+nav button i{display:block;font-style:normal;font-size:21px}nav button.on{color:var(--g);font-weight:700}
+.card{background:var(--c);border-radius:18px;padding:14px;margin-bottom:12px;border:1px solid #2d2450}
+.hero{background:linear-gradient(135deg,#7c3aed,#ff4d8d);color:#fff;border:0}
+.hero small{opacity:.9}.hero h2{margin:4px 0}
+.grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:12px}
+.tile{background:var(--c);border-radius:18px;padding:16px 8px;text-align:center;border:1px solid #2d2450;font-family:inherit;font-size:14px;color:var(--t)}
+.tile:active{transform:scale(.96);background:#271e4a}
+.tile i{display:block;font-style:normal;font-size:30px;margin-bottom:4px}
+h3{margin:4px 0 10px;color:var(--cy)}
+input,textarea,select{width:100%;padding:11px;border:1px solid #3b2f66;border-radius:12px;font-size:16px;font-family:inherit;margin-bottom:8px;background:#120d27;color:var(--t)}
+.btn{background:linear-gradient(120deg,#7c3aed,#ff4d8d);color:#fff;border:0;border-radius:12px;padding:11px 16px;font-size:15px;font-family:inherit}
+.btn.g{background:var(--g);color:#1b1535}.btn.s{padding:6px 10px;font-size:13px}
+.row{display:flex;align-items:center;gap:8px}.row>*{flex:0 0 auto}.row .f{flex:1}
+.chips{display:flex;gap:6px;overflow-x:auto;margin-bottom:10px}
+.chip{border:1px solid var(--cy);color:var(--cy);background:none;border-radius:20px;padding:5px 12px;font-size:13px;white-space:nowrap;font-family:inherit}
+.chip.on{background:var(--cy);color:#0f0b1e}
+.item{background:var(--c);border-radius:14px;padding:12px;margin-bottom:8px;border:1px solid #2d2450}
+.item small{color:#a79fd0;display:block}
+.txt{line-height:2;font-size:18px}
+.resp{color:var(--g);font-weight:700}
+.tag{font-size:11px;background:#2d2450;color:var(--cy);border-radius:8px;padding:2px 7px}
+.note{font-size:12px;color:#8f86b8;text-align:center;margin:10px 0}
+</style></head><body><div id="app">
+<header><span>⛪</span><b id="ttl">كنيسة السيدة العذراء مريم</b><span id="back" style="display:none" onclick="go('home')">↩</span></header>
+<main id="m"></main>
+<nav id="nav"></nav></div>
+<script>
+const $=s=>document.querySelector(s);
+const L=(k,d)=>{try{return JSON.parse(localStorage.getItem('ch_'+k))??d}catch(e){return d}};
+const S=(k,v)=>localStorage.setItem('ch_'+k,JSON.stringify(v));
+const esc=s=>String(s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+const tabs=[['home','🏠','الرئيسية'],['bible','📖','الكتاب'],['hymns','🎵','الألحان'],['deacon','🕯️','الشمامسة'],['daily','🌅','يومي'],['serv','🧑‍🏫','خدمتي'],['more','☰','المزيد']];
+const VERSES=[["الرَّبُّ رَاعِيَّ فَلاَ يُعْوِزُنِي شَيْءٌ.","مزمور 23: 1"],["لأَنَّهُ هكَذَا أَحَبَّ اللهُ الْعَالَمَ حَتَّى بَذَلَ ابْنَهُ الْوَحِيدَ.","يوحنا 3: 16"],["أَنَا هُوَ الرَّاعِي الصَّالِحُ.","يوحنا 10: 11"],["تَعَالَوْا إِلَيَّ يَا جَمِيعَ الْمُتْعَبِينَ وَالثَّقِيلِي الأَحْمَالِ وَأَنَا أُرِيحُكُمْ.","متى 11: 28"],["مَنْ أَرَادَ أَنْ يَأْتِيَ وَرَائِي فَلْيُنْكِرْ نَفْسَهُ وَيَحْمِلْ صَلِيبَهُ وَيَتْبَعْنِي.","مرقس 8: 34"],["كُلُّ شَيْءٍ أَسْتَطِيعُهُ فِي الْمَسِيحِ الَّذِي يُقَوِّينِي.","فيلبي 4: 13"],["لاَ تَخَفْ لأَنِّي فَدَيْتُكَ. دَعَوْتُكَ بِاسْمِكَ. أَنْتَ لِي.","إشعياء 43: 1"]];
+const BIBLE={"مزمور 23":{t:"الرَّبُّ رَاعِيَّ فَلاَ يُعْوِزُنِي شَيْءٌ. فِي مَرَاعٍ خُضْرٍ يُرْبِضُنِي. إِلَى مِيَاهِ الرَّاحَةِ يُورِدُنِي. يَرُدُّ نَفْسِي. يَهْدِينِي إِلَى سُبُلِ الْبِرِّ مِنْ أَجْلِ اسْمِهِ. أَيْضًا إِذَا سِرْتُ فِي وَادِي ظِلِّ الْمَوْتِ لاَ أَخَافُ شَرًّا لأَنَّكَ أَنْتَ مَعِي.",s:"داود بيقول إن ربنا زي راعي بيهتم بخرافه: بيأكلهم ويسقيهم ويحميهم. حتى في أصعب الأوقات مش خايف، لأن ربنا معاه."},
+"يوحنا 3":{t:"لأَنَّهُ هكَذَا أَحَبَّ اللهُ الْعَالَمَ حَتَّى بَذَلَ ابْنَهُ الْوَحِيدَ، لِكَيْ لاَ يَهْلِكَ كُلُّ مَنْ يُؤْمِنُ بِهِ، بَلْ تَكُونُ لَهُ الْحَيَاةُ الأَبَدِيَّةُ.",s:"ربنا حبنا لدرجة إنه ادّانا ابنه الوحيد. اللي يآمن بيه ياخد حياة ما بتخلصش."},
+"متى 5":{t:"طُوبَى لِلْمَسَاكِينِ بِالرُّوحِ لأَنَّ لَهُمُ مَلَكُوتَ السَّمَاوَاتِ. طُوبَى لِلْحَزَانَى لأَنَّهُمْ يتَعَزَّوْنَ. طُوبَى لِلْوُدَعَاءِ لأَنَّهُمْ يَرِثُونَ الأَرْضَ.",s:"التطويبات: السيد المسيح بيقول مين اللي فرحان بجد: المتواضع، واللي بيبكي على خطيته، والوديع."},
+"لوقا 15":{t:"إِنْسَانٌ كَانَ لَهُ ابْنَانِ... فَقَامَ وَجَاءَ إِلَى أَبِيهِ. وَإِذْ كَانَ لَمْ يَزَلْ بَعِيدًا رَآهُ أَبُوهُ فَتَحَنَّنَ وَرَكَضَ وَوَقَعَ عَلَى عُنُقِهِ وَقَبَّلَهُ.",s:"الابن الضال: لما رجع لأبوه، الأب جري يستقبله. ده شكل محبة ربنا لما نرجع له."}};
+const BOOKS={"العهد القديم":["التكوين","الخروج","اللاويين","العدد","التثنية","يشوع","القضاة","راعوث","صموئيل الأول","صموئيل الثاني","الملوك الأول","الملوك الثاني","أخبار الأيام الأول","أخبار الأيام الثاني","عزرا","نحميا","أستير","أيوب","المزامير","الأمثال","الجامعة","نشيد الأنشاد","إشعياء","إرميا","مراثي إرميا","حزقيال","دانيال","هوشع","يوئيل","عاموس","عوبديا","يونان","ميخا","ناحوم","حبقوق","صفنيا","حجي","زكريا","ملاخي"],"العهد الجديد":["متى","مرقس","لوقا","يوحنا","أعمال الرسل","رومية","كورنثوس الأولى","كورنثوس الثانية","غلاطية","أفسس","فيلبي","كولوسي","تسالونيكي الأولى","تسالونيكي الثانية","تيموثاوس الأولى","تيموثاوس الثانية","تيطس","فليمون","العبرانيين","يعقوب","بطرس الأولى","بطرس الثانية","يوحنا الأولى","يوحنا الثانية","يوحنا الثالثة","يهوذا","الرؤيا"]};
+const HYMNS=[{n:"المجد لله في الأعالي",c:"قداس",bpm:90,t:"المجد لله في الأعالي، وعلى الأرض السلام، وبالناس المسرة."},{n:"قدوس الله (التريصاجيون)",c:"قداس",bpm:70,t:"قدوس الله، قدوس القوي، قدوس الحي الذي لا يموت، الذي ولد من العذراء، ارحمنا."},{n:"نسجد لك أيها المسيح",c:"صوم",bpm:80,t:"نسجد لك أيها المسيح مع أبيك الصالح والروح القدس، لأنك أتيت وخلصتنا."},{n:"كيريي ليصون",c:"قداس",bpm:100,t:"كيريي ليصون (يا رب ارحم) × ٤١"},{n:"تين أويه (طلبة العذراء)",c:"العذراء",bpm:76,t:"نص نموذجي: يتضاف النص الكامل واللحن المسجل."},{n:"المسيح قام",c:"عيد",bpm:110,t:"المسيح قام من بين الأموات، بالموت داس الموت، والذين في القبور وهب لهم الحياة."}];
+const LIT=[["الكاهن","السلام لجميعكم"],["الشعب","ولروحك أيضاً"],["الكاهن","الرب معكم جميعكم"],["الشعب","ومع روحك أيضاً"],["الكاهن","ارفعوا قلوبكم"],["الشعب","هي عند الرب"],["الكاهن","فلنشكر الرب"],["الشعب","مستحق وعادل"],["الشماس","أيها الجلوس قفوا"],["الشعب","كيريي ليصون"]];
+const MED=["اتبعني: اليوم اختار خطوة صغيرة تقرّبك من المسيح، صلاة قصيرة أو آية تحفظها.","الراعي الصالح: المسيح بيسأل عنك بالاسم. اسأل النهاردة عن واحد غايب من الاجتماع.","تأمل: لا تخف لأني معك. إيه الحاجة اللي خايف منها وعايز تسلمها لربنا؟"];
+let cur='home',st={q:'',cat:'الكل',book:null,hs:null,fs:18,tp:null};
+function go(t){cur=t;st.mo=null;st.book=null;st.hs=null;render()}
+function nav(){ $('#nav').innerHTML=tabs.map(t=>`<button class="${cur===t[0]?'on':''}" onclick="go('${t[0]}')"><i>${t[1]}</i>${t[2]}</button>`).join('')}
+function today(){return new Date().toISOString().slice(0,10)}
+function render(){nav();$('#back').style.display=cur==='home'?'none':'';$('#m').scrollTop=0;({home,bible,hymns,deacon,daily,serv,more})[cur]()}
+function home(){
+ const mt=L('mtg',{n:"اجتماع القوي الأنبا موسى الأسود",d:"الجمعة 27 نوفمبر، 6 مساءً",p:"كنيسة السيدة العذراء مريم",x:"أين أنت؟ (تك 9:3)"});
+ const an=L('ann',["أبونا تيموثاوس راشد: الاجتماع الجمعة، في جديد ومفاجآت كتيير","نموذج: تقدر تضيف إعلان جديد من هنا"]);
+ const v=VERSES[new Date().getDate()%VERSES.length];
+ $('#m').innerHTML=`<div class="card hero"><small>الاجتماع القادم</small><h2>${esc(mt.n)}</h2><div>📅 ${esc(mt.d)}</div><div>📍 ${esc(mt.p)}</div><div>${esc(mt.x)}</div><button class="btn g s" style="margin-top:8px" onclick="editM()">تعديل</button></div>
+ <div class="card"><small>آية النهاردة</small><div class="txt">${v[0]}</div><b>${v[1]}</b></div>
+ <div class="grid"><button class="tile" onclick="go('bible')"><i>📖</i>الكتاب المقدس</button><button class="tile" onclick="go('hymns')"><i>🎵</i>الألحان</button><button class="tile" onclick="go('deacon')"><i>🕯️</i>خدمة الشمامسة</button><button class="tile" onclick="go('daily')"><i>🌅</i>تأمل يومي</button></div>
+ <div class="card"><h3>الإعلانات</h3>${an.map((a,i)=>`<div class="item row"><span class="f">${esc(a)}</span><button class="btn s" onclick="delA(${i})">حذف</button></div>`).join('')}<input id="na" placeholder="إعلان جديد"><button class="btn" onclick="addA()">إضافة</button></div>
+ <p class="note">نموذج تجريبي، الأقسام كلها شغالة والمحتوى تقدر تزوده.</p>`}
+function addA(){const v=$('#na').value.trim();if(!v)return;const a=L('ann',[]);a.unshift(v);S('ann',a);home()}
+function delA(i){const a=L('ann',[]);a.splice(i,1);S('ann',a);home()}
+function editM(){const m=L('mtg',{n:"",d:"",p:"",x:""});$('#m').innerHTML=`<div class="card"><h3>تعديل الاجتماع</h3><input id="a1" value="${esc(m.n)}" placeholder="الاسم"><input id="a2" value="${esc(m.d)}" placeholder="الميعاد"><input id="a3" value="${esc(m.p)}" placeholder="المكان"><input id="a4" value="${esc(m.x)}" placeholder="ملاحظة"><button class="btn" onclick="S('mtg',{n:$('#a1').value,d:$('#a2').value,p:$('#a3').value,x:$('#a4').value});home()">حفظ</button></div>`}
+function bible(){
+ if(st.book){const b=BIBLE[st.book];const sm=st.tp;$('#m').innerHTML=`<div class="card"><h3>${st.book}</h3><div class="txt">${b?esc(b.t):'النص الكامل بيتضاف هنا. المتاح كنموذج: '+Object.keys(BIBLE).join('، ')}</div>${b?`<button class="btn g" onclick="st.tp=!st.tp;bible()">${sm?'إخفاء':'تبسيط الكتاب'}</button>${sm?`<div class="item" style="margin-top:10px">💡 ${esc(b.s)}</div>`:''}`:''}<button class="btn s" style="margin-top:10px" onclick="st.book=null;bible()">رجوع</button></div>`;return}
+ const q=st.q;$('#m').innerHTML=`<input placeholder="ابحث عن سفر أو فصل" value="${esc(q)}" oninput="st.q=this.value;bibleList()"><div class="chips">${Object.keys(BIBLE).map(k=>`<button class="chip" onclick="st.book='${k}';st.tp=false;bible()">${k}</button>`).join('')}</div><div id="bl"></div>`;bibleList()}
+function bibleList(){ $('#bl').innerHTML=Object.entries(BOOKS).map(([g,a])=>`<h3>${g}</h3>`+a.filter(x=>x.includes(st.q)).map(x=>`<div class="item" onclick="st.book='${x}';st.tp=false;bible()">${x}</div>`).join('')).join('')}
+function hymns(){
+ if(st.hs!=null){const h=HYMNS[st.hs];$('#m').innerHTML=`<div class="card"><h3>${h.n}</h3><span class="tag">${h.c}</span><div class="txt" style="font-size:${st.fs}px">${esc(h.t)}</div><div class="row"><button class="btn s" onclick="st.fs+=2;hymns()">A+</button><button class="btn s" onclick="st.fs=Math.max(14,st.fs-2);hymns()">A-</button></div></div>
+ <div class="card"><h3>الهزّات (إيقاع اللحن)</h3><div class="row"><span>${h.bpm}</span><input class="f" type="range" min="50" max="140" value="${h.bpm}" id="bp" oninput="this.previousElementSibling.textContent=this.value"><span>نبضة/دقيقة</span></div><button class="btn" id="pb" onclick="beat()">▶ تشغيل الإيقاع</button><p class="note">إيقاع تجريبي للمساعدة في الحفظ. تسجيلات الألحان الأصلية بتتضاف بعدين.</p></div><button class="btn s" onclick="stopBeat();st.hs=null;hymns()">رجوع</button>`;return}
+ const cats=['الكل',...new Set(HYMNS.map(h=>h.c))];
+ $('#m').innerHTML=`<div class="chips">${cats.map(c=>`<button class="chip ${st.cat===c?'on':''}" onclick="st.cat='${c}';hymns()">${c}</button>`).join('')}</div>`+HYMNS.map((h,i)=>({h,i})).filter(o=>st.cat==='الكل'||o.h.c===st.cat).map(o=>`<div class="item row" onclick="st.hs=${o.i};hymns()"><span class="f">${o.h.n}<small>${o.h.c}</small></span>›</div>`).join('')}
+let bt=null,ac=null;
+function stopBeat(){clearInterval(bt);bt=null}
+function beat(){if(bt){stopBeat();$('#pb').textContent='▶ تشغيل الإيقاع';return}
+ ac=ac||new (window.AudioContext||window.webkitAudioContext)();$('#pb').textContent='⏹ إيقاف';
+ const tick=()=>{const o=ac.createOscillator(),g=ac.createGain();o.frequency.value=880;g.gain.setValueAtTime(.3,ac.currentTime);g.gain.exponentialRampToValueAtTime(.001,ac.currentTime+.12);o.connect(g);g.connect(ac.destination);o.start();o.stop(ac.currentTime+.13)};
+ tick();bt=setInterval(tick,60000/+$('#bp').value)}
+function deacon(){
+ const i=L('lit',0);$('#m').innerHTML=`<div class="card"><h3>الردود في القداس</h3><div class="row"><button class="btn s" onclick="st.fs+=2;deacon()">A+</button><button class="btn s" onclick="st.fs=Math.max(14,st.fs-2);deacon()">A-</button><button class="btn s g" onclick="S('lit',0);deacon()">من الأول</button></div></div>`+LIT.map((x,k)=>`<div class="item" style="${k===i?'border:2px solid var(--pk)':''}" onclick="S('lit',${Math.min(k+1,LIT.length-1)});deacon()"><small>${x[0]}</small><div class="${x[0]==='الشعب'?'resp':''}" style="font-size:${st.fs}px">${x[1]}</div></div>`).join('')+`<p class="note">اضغط على السطر عشان تنقل للي بعده. نموذج: باقي القداس بيتضاف.</p>`}
+function daily(){
+ const d=L('read',{});const m=MED[new Date().getDate()%MED.length];const v=VERSES[(new Date().getDate()+3)%VERSES.length];
+ const days=Object.keys(d).length;
+ $('#m').innerHTML=`<div class="card hero"><small>تأمل النهاردة</small><div class="txt">${m}</div></div><div class="card"><div class="txt">${v[0]}</div><b>${v[1]}</b><br><br><button class="btn ${d[today()]?'g':''}" onclick="markR()">${d[today()]?'✅ قريت النهاردة':'قريت النهاردة'}</button><p>عدد الأيام: <b>${days}</b></p></div>
+ <div class="card"><h3>صلاتي</h3><textarea id="pr" rows="4" placeholder="اكتب طلبة أو ملاحظة">${esc(L('pr',''))}</textarea><button class="btn" onclick="S('pr',$('#pr').value);this.textContent='اتحفظ ✓'">حفظ</button></div>`}
+function markR(){const d=L('read',{});d[today()]=1;S('read',d);daily()}
+function serv(){
+ const ppl=L('ppl',[]),att=L('att',{});const t=today();const a=att[t]||{};
+ $('#m').innerHTML=`<div class="card"><h3>حضور ${t}</h3><div class="row"><input class="f" id="np" placeholder="اسم مخدوم"><button class="btn" onclick="addP()">إضافة</button></div>${ppl.map((p,i)=>`<div class="item row"><span class="f">${esc(p.n)}<small>${p.ph?'📞 '+esc(p.ph):''}</small></span><button class="btn s ${a[i]?'':'g'}" onclick="tg(${i})">${a[i]?'حاضر':'غايب'}</button></div>`).join('')||'<p class="note">ضيف أسماء المخدومين</p>'}</div>
+ <div class="card"><h3>الراعي الصالح: افتقاد</h3>${ppl.filter((p,i)=>!a[i]).map(p=>`<div class="item row"><span class="f">${esc(p.n)}</span>${p.ph?`<a class="btn s" style="text-decoration:none" href="tel:${esc(p.ph)}">اتصل</a>`:''}</div>`).join('')||'<p class="note">مفيش غايبين</p>'}</div>`}
+function addP(){const n=$('#np').value.trim();if(!n)return;const p=L('ppl',[]);p.push({n});S('ppl',p);serv()}
+function tg(i){const att=L('att',{});const t=today();att[t]=att[t]||{};att[t][i]=!att[t][i];S('att',att);serv()}
+
+const COPT=[["Ⲁ ⲁ","ألفا","a"],["Ⲃ ⲃ","فيدا","v"],["Ⲅ ⲅ","غاما","g"],["Ⲇ ⲇ","دا","d"],["Ⲉ ⲉ","إي","e"],["Ⲍ ⲍ","زيدا","z"],["Ⲏ ⲏ","إيدا","i"],["Ⲑ ⲑ","ثيتا","th"],["Ⲓ ⲓ","يوتا","i"],["Ⲕ ⲕ","كابا","k"],["Ⲗ ⲗ","لولا","l"],["Ⲙ ⲙ","مي","m"],["Ⲛ ⲛ","ني","n"],["Ⲟ ⲟ","أو","o"],["Ⲡ ⲡ","بي","p"],["Ⲣ ⲣ","رو","r"],["Ⲥ ⲥ","سيما","s"],["Ⲧ ⲧ","داو","t"],["Ⲩ ⲩ","إبسيلون","u"],["Ⲫ ⲫ","في","ph"],["Ⲭ ⲭ","خي","kh"],["Ⲯ ⲯ","إبسي","ps"],["Ⲱ ⲱ","أو","o"]];
+const CHARS=[["إبراهيم","أبو الآباء. آمن بوعد ربنا وساب أرضه وهو مش عارف رايح فين. (تك 12)"],["موسى","قاد شعب ربنا من مصر وأخذ الوصايا. (خروج)"],["داود","راعي غنم بقى ملك، وكاتب أغلب المزامير. (1 صم 16)"],["راعوث","امرأة موآبية اتمسكت بحماتها وربنا بارك حياتها. (راعوث)"],["أستير","ملكة خاطرت بنفسها عشان تنقذ شعبها. (أستير)"],["بطرس","صياد بقى رسول، أنكر المسيح ورجع بتوبة. (يو 21)"]];
+const TAFSIR=[["يوحنا 3: 16","محبة ربنا ليست كلام، هي عطية: ادّانا ابنه. والإيمان هو إننا نقبل العطية دي."],["متى 5: 3","المسكين بالروح هو اللي عارف إنه محتاج لربنا، فربنا يملأه."],["لوقا 15: 20","الأب شاف ابنه من بعيد وجري، يعني ربنا بيسبق ويستقبل مش بيستنى."]];
+const KITH=[["ترنيمة نموذجية 1","كلمات الترنيمة بتتضاف هنا"],["ترنيمة نموذجية 2","كلمات الترنيمة بتتضاف هنا"]];
+const KAT=[["فصل من الإنجيل","يوحنا 10: 11-16 (نموذج)"],["مزمور","مزمور 23 (نموذج)"],["البولس","فيلبي 4: 4-9 (نموذج)"]];
+const MORE=[['kat','📜','القطمارس والقراءات'],['kith','🎶','قيثارة الروح (ترانيم)'],['copt','🔤','قارئ قبطي'],['chars','👤','شخصيات الكتاب'],['taf','💡','تفسير الإنجيل'],['dawud','🎙️','أبونا داود']];
+function more(){
+ const k=st.mo;
+ if(!k){$('#m').innerHTML='<div class="grid">'+MORE.map(x=>`<button class="tile" onclick="st.mo='${x[0]}';more()"><i>${x[1]}</i>${x[2]}</button>`).join('')+'</div><p class="note">ده نموذج: بعض المحتوى تجريبي ويتكمل بعدين.</p>';return}
+ const T=MORE.find(x=>x[0]===k)[2];let b='';
+ if(k==='kat')b=KAT.map(x=>`<div class="item"><small>${x[0]}</small>${x[1]}</div>`).join('')+'<p class="note">القراءات الفعلية لكل يوم بتتضاف حسب التقويم القبطي.</p>';
+ if(k==='kith')b=KITH.map(x=>`<div class="item"><b>${x[0]}</b><small>${x[1]}</small></div>`).join('');
+ if(k==='copt')b='<div class="grid">'+COPT.map(x=>`<div class="tile"><div style="font-size:26px">${x[0]}</div>${x[1]}<small style="display:block;color:#777">${x[2]}</small></div>`).join('')+'</div>';
+ if(k==='chars')b=CHARS.map(x=>`<div class="item"><b>${x[0]}</b><small>${x[1]}</small></div>`).join('');
+ if(k==='taf')b=TAFSIR.map(x=>`<div class="item"><b>${x[0]}</b><div>${x[1]}</div></div>`).join('');
+ if(k==='dawud'){const n=L('dw',[]);b=`<div class="card"><input id="dt" placeholder="عنوان عظة أو رابط"><button class="btn" onclick="const a=L('dw',[]);if($('#dt').value.trim()){a.push($('#dt').value.trim());S('dw',a);more()}">إضافة</button></div>`+n.map(x=>`<div class="item">${esc(x)}</div>`).join('')+'<p class="note">مكان لعظات وكتابات أبونا داود، تضيف الروابط بنفسك.</p>'}
+ $('#m').innerHTML=`<div class="row"><button class="btn s" onclick="st.mo=null;more()">رجوع</button><h3 class="f">${T}</h3></div>`+b}
+if('serviceWorker' in navigator)navigator.serviceWorker.register('sw.js');
+render();
+</script></body></html>
